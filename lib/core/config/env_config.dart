@@ -1,36 +1,37 @@
-// lib/core/config/env_config.dart
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+/// EnvConfig centralise le chargement et l'accès aux variables d'environnement.
 class EnvConfig {
-  // 🔑 Configuration des tokens d'API
-  // IMPORTANT: Ne jamais committer les vraies valeurs !
-
-  static const String _huggingFaceToken = String.fromEnvironment(
-    'HUGGING_FACE_TOKEN',
-    defaultValue: '', // Token vide par défaut
-  );
-
-  // 📖 Getters pour accéder aux tokens de manière sécurisée
-  static String get huggingFaceToken {
-    if (_huggingFaceToken.isEmpty) {
-      throw Exception('Token Hugging Face manquant. '
-          'Veuillez configurer HUGGING_FACE_TOKEN dans vos variables d\'environnement.');
+  /// Charge le fichier `.env` si présent. Appeler dès le démarrage (main).
+  static Future<void> load() async {
+    try {
+      await dotenv.load();
+    } catch (_) {
+      // ignore: avoid_print
+      print('No .env file found or failed to load — proceeding with environment variables');
     }
-    return _huggingFaceToken;
   }
 
-  // 🧪 Vérifier si les tokens sont configurés
-  static bool get isHuggingFaceConfigured => _huggingFaceToken.isNotEmpty;
+  static String get geminiApiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
+  static String get openWeatherApiKey => dotenv.env['OPENWEATHER_API_KEY'] ?? '';
+  static String get huggingFaceApiKey => dotenv.env['HUGGINGFACE_API_KEY'] ?? '';
+  static String get supabaseUrl => dotenv.env['SUPABASE_URL'] ?? '';
+  static String get supabaseAnonKey => dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 
-  // 📝 Instructions pour configurer les tokens
+  static bool get isHuggingFaceConfigured => huggingFaceApiKey.isNotEmpty;
+
   static String get configInstructions => '''
-Pour configurer vos tokens API:
+Pour configurer vos tokens API localement:
 
-1. Créez un fichier .env à la racine du projet:
-   HUGGING_FACE_TOKEN=your_token_here
+1) Créez un fichier `.env` à la racine du projet avec des clés comme:
+   GEMINI_API_KEY=your_gemini_key
+   OPENWEATHER_API_KEY=your_openweather_key
+   HUGGINGFACE_API_KEY=your_hf_token
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your-anon-key
 
-2. Ou définissez les variables d'environnement:
-   export HUGGING_FACE_TOKEN=your_token_here
+2) Ce fichier est ignoré par Git (vérifiez `.gitignore`).
 
-3. Ou utilisez --dart-define lors de la compilation:
-   flutter run --dart-define=HUGGING_FACE_TOKEN=your_token_here
+3) Alternativement, exportez les variables d'environnement ou utilisez --dart-define.
 ''';
 }

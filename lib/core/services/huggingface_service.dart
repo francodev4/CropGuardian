@@ -2,11 +2,12 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import '../config/env_config.dart';
 
 class HuggingFaceService {
   static const String _baseUrl = 'https://api-inference.huggingface.co/models';
-  static const String _apiKey =
-      ''; // ⚠️ Remplacer par votre vrai token
+
+  String get _apiKey => EnvConfig.huggingFaceApiKey;
 
   final Dio _dio = Dio();
 

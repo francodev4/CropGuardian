@@ -2,17 +2,14 @@
 
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
+import '../config/env_config.dart';
 import '../models/weather_model.dart';
 
 class WeatherService {
   final Dio _dio;
 
-  // Clé API OpenWeatherMap
-  // IMPORTANT: Ne laissez PAS la clé en dur dans le code. Mettez votre clé dans `.env`.
-  // Exemple `.env`:
-  // OPENWEATHER_API_KEY=your-real-key
-  // Ici on utilise un placeholder vide pour éviter d'exposer la clé dans le repo.
-  static const String _apiKey = '';
+  // Read API key from EnvConfig (loaded from .env or environment)
+  static String get _apiKey => EnvConfig.openWeatherApiKey;
   static const String _baseUrl = 'https://api.openweathermap.org/data/2.5';
 
   WeatherService({Dio? dio}) : _dio = dio ?? Dio();

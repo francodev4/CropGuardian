@@ -61,6 +61,8 @@ dependencies:
 
   # AI - Gemini
   google_generative_ai: ^0.4.0
+  # Env loader
+  flutter_dotenv: ^6.0.0
   # TensorFlow Lite inference for local models
   # Use a tflite_flutter version compatible with tflite_flutter_helper
   tflite_flutter: ^0.9.0

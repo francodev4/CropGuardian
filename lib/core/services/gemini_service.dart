@@ -4,18 +4,14 @@ import 'dart:io';
 // Ajout nécessaire
 // Ajout nécessaire pour kIsWeb
 import 'package:google_generative_ai/google_generative_ai.dart';
+import '../config/env_config.dart';
 
 class GeminiService {
   static final GeminiService instance = GeminiService._internal();
   factory GeminiService() => instance;
   GeminiService._internal();
 
-  // ⚠️ REMPLACEZ PAR VOTRE CLÉ API GEMINI!
-  // IMPORTANT: Ne laissez PAS la clé en dur dans le code. Mettez votre clé dans `.env`
-  // Exemple `.env`:
-  // GEMINI_API_KEY=your-real-key
-  // Ici on utilise un placeholder vide pour éviter d'exposer la clé dans le repo.
-  static const String _apiKey = '';
+  String get _apiKey => EnvConfig.geminiApiKey;
 
   GenerativeModel? _model;
   GenerativeModel? _visionModel; // Nouveau modèle pour l'analyse d'image
@@ -162,8 +158,9 @@ Réponse concise (max 150 mots).
 
     // Logique de parsing très simple et fragile, basée sur des mots-clés
     for (final line in lines) {
-      if (line.toLowerCase().contains('nom:'))
+      if (line.toLowerCase().contains('nom:')) {
         name = line.split(':').last.trim();
+      }
       if (line.toLowerCase().contains('confiance:')) {
         try {
           String confStr = line
@@ -177,10 +174,12 @@ Réponse concise (max 150 mots).
               : 0.5;
         } catch (_) {}
       }
-      if (line.toLowerCase().contains('gravité:'))
+      if (line.toLowerCase().contains('gravité:')) {
         severity = line.split(':').last.trim();
-      if (line.toLowerCase().contains('recommandation:'))
+      }
+      if (line.toLowerCase().contains('recommandation:')) {
         recommendations = line.split(':').last.trim();
+      }
     }
 
     return {
