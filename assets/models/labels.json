@@ -1,0 +1,24 @@
+{
+  "labels": [
+    "Africanized Honey Bees (Killer Bees)",
+    "Aphids",
+    "Armyworms",
+    "Brown Marmorated Stink Bugs",
+    "Cabbage Loopers",
+    "Citrus Canker",
+    "Colorado Potato Beetles",
+    "Corn Borers",
+    "Corn Earworms",
+    "Fall Armyworms",
+    "Fruit Flies",
+    "Spider Mites",
+    "Thrips",
+    "Tomato Hornworms",
+    "Western Corn Rootworms"
+  ],
+  "model_info": {
+    "num_classes": 15,
+    "img_size": 224,
+    "accuracy": 0.6731391549110413
+  }
+}

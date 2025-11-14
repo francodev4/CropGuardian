@@ -1,0 +1,106 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+// Définir les propriétés de version Flutter
+def flutterVersionCode = 1
+def flutterVersionName = "1.0.0"
+
+// Fix pour GeneratedPluginRegistrant.java
+task fixGeneratedPluginRegistrant {
+    doLast {
+        def pluginFile = file("src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java")
+        if (pluginFile.exists()) {
+            def content = pluginFile.text
+            
+            if (content.contains("io.flutter.Log")) {
+                content = content.replace("io.flutter.Log", "android.util.Log")
+                content = content.replace("import io.flutter.Log;", "import android.util.Log;")
+                pluginFile.text = content
+                println("✅ Fixed GeneratedPluginRegistrant.java - corrected Log import")
+            }
+        }
+    }
+}
+
+// Exécuter avant la compilation Java
+tasks.whenTaskAdded { task ->
+    if (task.name.contains("compileDebugJavaWithJavac") || 
+        task.name.contains("compileReleaseJavaWithJavac")) {
+        task.dependsOn fixGeneratedPluginRegistrant
+    }
+}
+
+android {
+    namespace = "com.example.crop_guardian"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        // GARDEZ le package généré par Flutter
+        applicationId = "com.example.crop_guardian"
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutterVersionCode
+        versionName = flutterVersionName
+        multiDexEnabled = true
+        
+        // Configuration pour TFLite
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+    
+    // Empêcher la compression des fichiers .tflite
+    aaptOptions {
+        noCompress "tflite"
+        noCompress "lite"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig = signingConfigs.debug
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    implementation 'androidx.browser:browser:1.6.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    
+    // Google Sign-In
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+}
