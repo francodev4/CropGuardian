@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
 import 'core/config/supabase_config.dart';
+import 'core/config/env_config.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/providers/auth_provider.dart';
@@ -15,6 +16,9 @@ List<CameraDescription> globalCameras = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Charger les variables d'environnement depuis `.env` si présent
+  await EnvConfig.load();
 
   // Configuration de l'orientation
   await SystemChrome.setPreferredOrientations([
