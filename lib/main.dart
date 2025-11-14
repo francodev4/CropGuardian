@@ -46,7 +46,8 @@ void main() async {
     );
     debugPrint('✅ Supabase initialisé');
   } catch (e) {
-    debugPrint('⚠️ Erreur Supabase (l\'app fonctionnera en mode hors ligne): $e');
+    debugPrint(
+        '⚠️ Erreur Supabase (l\'app fonctionnera en mode hors ligne): $e');
     // L'app continue même si Supabase échoue
   }
 
@@ -87,7 +88,8 @@ void _initializeAIInBackground() async {
     );
     debugPrint('✅ IA initialisée avec succès !');
   } catch (e) {
-    debugPrint('⚠️ Erreur initialisation IA (l\'app fonctionnera sans IA avancée): $e');
+    debugPrint(
+        '⚠️ Erreur initialisation IA (l\'app fonctionnera sans IA avancée): $e');
     // L'app continue même si l'IA échoue
   }
 }
